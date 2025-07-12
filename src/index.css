@@ -1,0 +1,43 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+/* Đặt font mặc định cho toàn app */
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0f172a; /* Fallback cho nền gradient nếu Tailwind chưa load */
+  color: #1e293b;      /* Màu chữ xám đậm chuẩn */
+  scrollbar-width: thin;
+  scrollbar-color: #a7f3d0 #f3f4f6;
+}
+
+/* Scrollbar đẹp cho Chrome/Edge */
+body::-webkit-scrollbar {
+  width: 7px;
+  background: #f3f4f6;
+}
+body::-webkit-scrollbar-thumb {
+  background: #a7f3d0;
+  border-radius: 4px;
+}
+
+/* Ẩn highlight xấu khi click trên mobile */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hỗ trợ 2 dòng ... (nếu chưa cài plugin line-clamp của Tailwind) */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Không hiển thị scrollbar ngang trên nav (nếu dùng overflow-x-auto) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
