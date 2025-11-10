@@ -1,16 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 import History from "./pages/History";
 import ProductModal from "./components/ProductModal";
 import MainNav from "./components/MainNav"; // <-- Thêm dòng này
 
+const FAVORITES_KEY = "edtech_ai_favorites";
+const HISTORY_KEY = "edtech_ai_history";
+
+function readStoredList(key) {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
 export default function App() {
   const [page, setPage] = useState("home");
-  const [favorites, setFavorites] = useState([]);
-  const [history, setHistory] = useState([]);
+  const [favorites, setFavorites] = useState(() => readStoredList(FAVORITES_KEY));
+  const [history, setHistory] = useState(() => readStoredList(HISTORY_KEY));
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  }, [favorites]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  }, [history]);
 
   // Thêm vào danh sách yêu thích
   function handleAddFavorite(product) {

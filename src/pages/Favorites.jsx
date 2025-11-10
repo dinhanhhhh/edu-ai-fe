@@ -9,6 +9,7 @@ export default function Favorites({ favorites, onRemoveFavorite, onDetail }) {
         onFavorite={onRemoveFavorite}
         onDetail={onDetail}
         favorites={favorites}
+        emptyMessage="Bạn chưa lưu sản phẩm nào vào mục yêu thích"
       />
     </div>
   );

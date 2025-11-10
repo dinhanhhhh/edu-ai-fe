@@ -14,6 +14,7 @@ export default function History({
         onFavorite={onAddFavorite}
         onDetail={onDetail}
         favorites={favorites}
+        emptyMessage="Bạn chưa xem sản phẩm nào gần đây"
       />
     </div>
   );

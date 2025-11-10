@@ -5,11 +5,12 @@ export default function ProductList({
   onFavorite,
   onDetail,
   favorites = [],
+  emptyMessage = "Không có sản phẩm nào để hiển thị",
 }) {
   if (!products?.length) {
     return (
       <div className="text-center text-gray-400 py-12 text-lg italic">
-        Không có sản phẩm nào để hiển thị
+        {emptyMessage}
       </div>
     );
   }
