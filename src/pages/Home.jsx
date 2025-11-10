@@ -20,6 +20,7 @@ export default function Home({
   const [suggested, setSuggested] = useState([]);
   const [suggesting, setSuggesting] = useState(false);
   const [toast, setToast] = useState(null);
+  const [assistantPointer, setAssistantPointer] = useState(0);
 
   useEffect(() => {
     fetchProducts().then((data) => {
@@ -49,6 +50,7 @@ export default function Home({
         history.map((p) => p.id)
       );
       setSuggested(suggestions);
+      setAssistantPointer(0);
     } catch (error) {
       console.error(error);
       setToast({ type: "error", message: "Không thể lấy gợi ý lúc này" });
@@ -84,7 +86,28 @@ export default function Home({
     { label: "Học viên", value: "15K+" },
   ];
 
-  const assistantProduct = favorites[0] || suggested[0] || products[0] || null;
+  useEffect(() => {
+    setAssistantPointer(0);
+  }, [products.length]);
+
+  useEffect(() => {
+    setAssistantPointer(0);
+  }, [suggested.length]);
+
+  const assistantPool =
+    suggested.length > 0 ? suggested : products;
+  const assistantProduct =
+    assistantPool.length > 0
+      ? assistantPool[assistantPointer % assistantPool.length]
+      : null;
+
+  function handleNextAssistant() {
+    if (suggested.length > 0 || assistantPool.length > 1) {
+      setAssistantPointer((prev) => prev + 1);
+    } else if (!suggesting) {
+      handleSuggest();
+    }
+  }
 
   return (
     <div className="max-w-5xl mx-auto p-3 space-y-6">
@@ -216,7 +239,7 @@ export default function Home({
             </button>
             <button
               className="rounded-2xl border border-slate-200 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50"
-              onClick={handleSuggest}
+              onClick={handleNextAssistant}
             >
               Gợi ý khác
             </button>
