@@ -24,8 +24,8 @@ export default function ProductCard({
           </span>
         )}
       </div>
-      {/* SỬ DỤNG ASPECT-RATIO */}
-      <div className="aspect-w-16 aspect-h-9 overflow-hidden rounded-xl shadow-sm">
+      {/* Giữ tỷ lệ ảnh cố định với util mới của Tailwind 4 */}
+      <div className="aspect-[16/9] overflow-hidden rounded-xl shadow-sm">
         <img
           src={product.image}
           alt={product.name}

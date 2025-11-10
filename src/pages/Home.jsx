@@ -5,24 +5,20 @@ import SearchBar from "../components/SearchBar";
 import PriceFilter from "../components/PriceFilter";
 import Skeleton from "../components/Skeleton";
 import Toast from "../components/Toast";
-import ProductModal from "../components/ProductModal";
 
 export default function Home({
   onAddFavorite,
   onRemoveFavorite,
   favorites,
   history,
-  addToHistory,
+  onDetail,
 }) {
   const [products, setProducts] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState(""); // "<500K", "500K-1M", ">1M"
   const [loading, setLoading] = useState(true);
   const [suggested, setSuggested] = useState([]);
   const [suggesting, setSuggesting] = useState(false);
-  const [suggestError, setSuggestError] = useState("");
   const [toast, setToast] = useState("");
 
   useEffect(() => {
@@ -45,7 +41,6 @@ export default function Home({
 
   async function handleSuggest() {
     setSuggesting(true);
-    setSuggestError("");
     setSuggested([]);
     try {
       const suggestions = await fetchSuggestions(
@@ -54,19 +49,16 @@ export default function Home({
         history.map((p) => p.id)
       );
       setSuggested(suggestions);
-    } catch {
-      setSuggestError("Không thể lấy gợi ý lúc này");
+    } catch (error) {
+      console.error(error);
       setToast("Không thể lấy gợi ý lúc này");
-      setTimeout(() => setToast(""), 1500);
     } finally {
       setSuggesting(false);
     }
   }
 
   function handleViewDetail(product) {
-    setSelectedProduct(product);
-    setShowModal(true);
-    addToHistory(product);
+    onDetail(product);
   }
 
   function handleFavorite(product) {
@@ -74,13 +66,17 @@ export default function Home({
       onAddFavorite(product);
       setToast("Đã thêm vào yêu thích!");
     } else {
-      // Giả sử bạn đã truyền thêm hàm onRemoveFavorite từ App xuống Home
       onRemoveFavorite(product);
       setToast("Đã bỏ khỏi yêu thích!");
     }
-    setTimeout(() => setToast(""), 1500);
   }
-  
+
+  useEffect(() => {
+    if (!toast) return undefined;
+    const timeoutId = setTimeout(() => setToast(""), 1500);
+    return () => clearTimeout(timeoutId);
+  }, [toast]);
+
 
   return (
     <div className="max-w-4xl mx-auto p-2">
@@ -98,7 +94,6 @@ export default function Home({
         </button>
       </div>
       {suggesting && <Skeleton />}
-      {suggestError && <Toast msg={suggestError} />}
       {suggested.length > 0 && (
         <div className="mb-4">
           <h2 className="font-semibold mb-2">Sản phẩm được AI gợi ý:</h2>
@@ -122,12 +117,6 @@ export default function Home({
         />
       )}
 
-      {showModal && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setShowModal(false)}
-        />
-      )}
       {toast && <Toast msg={toast} />}
     </div>
   );

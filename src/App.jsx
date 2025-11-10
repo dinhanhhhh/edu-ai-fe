@@ -53,7 +53,6 @@ export default function App() {
           onRemoveFavorite={handleRemoveFavorite}
           favorites={favorites}
           history={history}
-          addToHistory={handleAddToHistory}
           onDetail={handleShowDetail}
         />
       )}
